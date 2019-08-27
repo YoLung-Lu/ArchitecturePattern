@@ -37,6 +37,10 @@ android {
             }
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
@@ -53,6 +57,7 @@ dependencies {
 
     // Package.
     implementation project(":mvc")
+    implementation project(":repository")
 
 
     // RxJava.
