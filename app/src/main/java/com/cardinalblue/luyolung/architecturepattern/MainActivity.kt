@@ -7,7 +7,6 @@ import android.view.View
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC1
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC2
 import com.cardinalblue.luyolung.architecturepattern.UseCaseAdapter.ItemClickListener
 import com.cardinalblue.luyolung.mvc.MVCActivity
 
@@ -32,14 +31,14 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
     }
 
     override fun onItemClick(view: View, useCase: UseCase) {
-        when (useCase) {
-            MVC1 -> {
-                val intent = Intent(this, MVCActivity::class.java)
-                this.startActivity(intent)
+        val navigateIntent: Intent? =
+            when (useCase) {
+                MVC1 -> Intent(this, MVCActivity::class.java)
+                else -> null
             }
-            MVC2 -> {
 
-            }
+        navigateIntent?.let {
+            this.startActivity(it)
         }
     }
 }
