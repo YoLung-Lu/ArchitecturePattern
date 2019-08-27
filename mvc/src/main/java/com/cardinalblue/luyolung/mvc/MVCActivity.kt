@@ -56,7 +56,7 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = Article(null, "2", "3", "4", "5")
+                val article = Article(null, "2", "3", "廢文", -10, "4", "5")
                 controller.createNewArticle(article)
             }.addTo(disposableBag)
     }

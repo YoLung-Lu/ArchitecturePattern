@@ -23,9 +23,8 @@ class ArticleAdapter(context: Context, private val articleData: List<Article>):
     // binds the data to the TextView in each row
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val article = articleData[position]
-        // TODO:
-//        holder.categoryTextView.text = "test"
-//        holder.pushTextView.text = "test"
+        holder.categoryTextView.text = article.category
+        holder.pushTextView.text = article.pushNum.toString()
         holder.titleTextView.text = article.title
         holder.idTextView.text = article.id.toString()
         holder.authorTextView.text = article.author

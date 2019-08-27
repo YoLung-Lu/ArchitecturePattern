@@ -77,9 +77,9 @@ abstract class ArticleRoomDatabase: RoomDatabase() {
             // Not needed if you only populate on creation.
             wordDao.deleteAll()
 
-            val article1 = Article(null, "Hello", "Allen", "This is the content", "25-08-2019")
+            val article1 = Article(null, "Hello", "Allen", "廢文", 999, "This is the content", "25-08-2019")
             wordDao.insert(article1)
-            val article2 = Article(null, "Testing", "Beta", "~~~~~~~", "25-08-2019")
+            val article2 = Article(null, "Testing", "Beta", "廢文", -50, "~~~~~~~", "25-08-2019")
             wordDao.insert(article2)
         }
     }

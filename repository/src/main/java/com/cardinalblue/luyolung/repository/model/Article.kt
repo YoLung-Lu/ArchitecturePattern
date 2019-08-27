@@ -11,6 +11,8 @@ data class Article(
     // TODO:
 //    val author: User,
     val author: String,
+    val category: String,
+    val pushNum: Int,
     val content: String,
     val publishTime: String
 )
