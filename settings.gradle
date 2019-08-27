@@ -1,1 +1,1 @@
-include ':app', ':mvc', ':repository'
+include ':app', ':mvc', ':repository', ':ui'
