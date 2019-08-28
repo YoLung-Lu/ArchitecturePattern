@@ -2,14 +2,7 @@ package com.cardinalblue.luyolung.mvc.second
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.TransitionManager
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.Guideline
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.repository.database.sharepref.SharePrefRepository
 import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
@@ -18,10 +11,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvc.*
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvc.R
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
-import com.cardinalblue.luyolung.ui.ArticleContentView
 import com.cardinalblue.luyolung.ui.ArticleView
 
 
@@ -37,7 +28,7 @@ class MVCActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_mvc2)
+        setContentView(R.layout.activity_mvc)
 
         // View.
         articleView = findViewById(R.id.article_view)

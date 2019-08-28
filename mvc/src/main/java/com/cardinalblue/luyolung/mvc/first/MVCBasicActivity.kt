@@ -22,14 +22,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvc.R
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleContentView
+import com.cardinalblue.luyolung.ui.ArticleView
 
 
 class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
-    private lateinit var contentView: ArticleContentView
-    private lateinit var articleListView: RecyclerView
-    private lateinit var guideline: Guideline
-    private lateinit var layout: ConstraintLayout
+    private lateinit var articleView: ArticleView
 
     private val viewData: MutableList<Article> = mutableListOf()
     private lateinit var adapter: ArticleAdapter
@@ -43,18 +41,11 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         setContentView(R.layout.activity_mvc)
 
         // View.
-        contentView = findViewById(R.id.article_content)
-        articleListView = findViewById(R.id.article_list)
-        guideline = findViewById(R.id.guide_list)
-        layout = findViewById(R.id.layout)
-        articleListView.layoutManager = LinearLayoutManager(this)
+        articleView = findViewById(R.id.article_view)
 
         adapter  = ArticleAdapter(this, viewData)
         adapter.setClickListener(this)
-        articleListView.adapter = adapter
-
-        val dividerItemDecoration = DividerItemDecoration(articleListView.context, RecyclerView.VERTICAL)
-        articleListView.addItemDecoration(dividerItemDecoration)
+        articleView.setAdapter(adapter)
 
         // Repository.
         repository.setDefaultArticle(getDefaultArticle())
@@ -102,53 +93,19 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         adapter.notifyDataSetChanged()
     }
 
-    // View behavior.
-    private fun showArticleContent(article: Article) {
 
-        adapter.hideDetail()
+    private fun showArticleContent(article: Article) {
 
         back_btn.visibility = View.VISIBLE
 
-        contentView.setArticle(article)
-
-        // Shift layout.
-        val set = ConstraintSet()
-        set.clone(layout)
-        set.connect(
-            R.id.article_list, ConstraintSet.RIGHT,
-                    guideline.id, ConstraintSet.RIGHT)
-        set.connect(
-            R.id.article_content, ConstraintSet.LEFT,
-                    guideline.id, ConstraintSet.RIGHT)
-        set.applyTo(layout)
-
-        // Animation.
-        val transition = ChangeBounds()
-        TransitionManager.beginDelayedTransition(layout, transition)
-
+        articleView.showArticleContent(article)
     }
 
-    // View behavior.
     private fun hideArticleContent() {
-
-        adapter.showDetail()
 
         back_btn.visibility = View.INVISIBLE
 
-        // Shift layout.
-        val set = ConstraintSet()
-        set.clone(layout)
-        set.connect(
-            R.id.article_list, ConstraintSet.RIGHT,
-            layout.id, ConstraintSet.RIGHT)
-        set.connect(
-            R.id.article_content, ConstraintSet.LEFT,
-            layout.id, ConstraintSet.RIGHT)
-        set.applyTo(layout)
-
-        // Animation.
-        val transition = ChangeBounds()
-        TransitionManager.beginDelayedTransition(layout, transition)
+        articleView.hideArticleContent()
     }
 
     // Control behavior.
