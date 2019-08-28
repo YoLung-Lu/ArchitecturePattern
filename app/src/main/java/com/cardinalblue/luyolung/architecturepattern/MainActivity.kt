@@ -15,7 +15,7 @@ import com.cardinalblue.luyolung.architecturepattern.UseCaseAdapter.ItemClickLis
 import com.cardinalblue.luyolung.mvc.first.MVCBasicActivity
 import com.cardinalblue.luyolung.mvc.second.MVCActivity
 import com.cardinalblue.luyolung.mvp.MVPActivity
-import com.cardinalblue.luyolung.mvvm.MVVMActivity
+import com.cardinalblue.luyolung.mvvm.first.MVVMActivity
 import com.cardinalblue.luyolung.mvvm.second.MVVMRXActivity
 
 class MainActivity : AppCompatActivity(), ItemClickListener {

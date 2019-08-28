@@ -6,7 +6,7 @@
             android:label="@string/app_name"
             android:supportsRtl="true">
 
-        <activity android:name=".MVVMActivity"/>
+        <activity android:name=".first.MVVMActivity"/>
         <activity android:name=".second.MVVMRXActivity"/>
 
     </application>

@@ -1,4 +1,4 @@
-package com.cardinalblue.luyolung.mvvm
+package com.cardinalblue.luyolung.mvvm.first
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,8 +16,7 @@ import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.ui.ArticleAdapter
 import io.reactivex.disposables.CompositeDisposable
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.cardinalblue.luyolung.mvvm.first.ArticleListViewModel
-import com.cardinalblue.luyolung.mvvm.first.ArticleViewModel
+import com.cardinalblue.luyolung.mvvm.R
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleContentView
 import com.jakewharton.rxbinding2.view.RxView
@@ -32,7 +31,6 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
     private lateinit var guideline: Guideline
     private lateinit var layout: ConstraintLayout
 
-    private val viewData: MutableList<Article> = mutableListOf()
     private lateinit var adapter: ArticleAdapter
 
     private lateinit var articleListViewModel: ArticleListViewModel
@@ -51,7 +49,7 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         layout = findViewById(R.id.layout)
         articleListView.layoutManager = LinearLayoutManager(this)
 
-        adapter  = ArticleAdapter(this, viewData)
+        adapter  = ArticleAdapter(this, mutableListOf())
         adapter.setClickListener(this)
         articleListView.adapter = adapter
 

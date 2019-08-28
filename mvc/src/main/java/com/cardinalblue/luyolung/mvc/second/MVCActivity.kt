@@ -24,7 +24,7 @@ import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleContentView
 
 
-class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapter.ItemClickListener {
+class MVCActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     private lateinit var contentView: ArticleContentView
     private lateinit var articleListView: RecyclerView
@@ -86,13 +86,13 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
     }
 
     // View behavior.
-    override fun onUpdate(articles: List<Article>) {
+    fun onUpdate(articles: List<Article>) {
         viewData.clear()
         viewData.addAll(articles)
         adapter.notifyDataSetChanged()
     }
 
-    override fun showArticleContent(article: Article) {
+    fun showArticleContent(article: Article) {
 
         adapter.hideDetail()
 
@@ -117,7 +117,7 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
 
     }
 
-    override fun hideArticleContent() {
+    fun hideArticleContent() {
 
         adapter.showDetail()
 

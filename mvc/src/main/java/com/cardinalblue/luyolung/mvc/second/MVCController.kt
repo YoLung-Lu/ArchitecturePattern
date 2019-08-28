@@ -4,8 +4,7 @@ import com.cardinalblue.luyolung.repository.database.sharepref.SharePrefReposito
 import com.cardinalblue.luyolung.repository.model.Article
 
 class MVCController(private val repository: SharePrefRepository,
-                    private val view: ViewContract.ArticleView
-) {
+                    private val view: MVCActivity) {
 
     init {
         if (repository.getArticles().size == 0) {
