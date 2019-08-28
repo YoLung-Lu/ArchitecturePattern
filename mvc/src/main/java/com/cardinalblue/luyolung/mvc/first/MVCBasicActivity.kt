@@ -59,6 +59,8 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         repository.setDefaultArticle(getDefaultArticle())
 
         subscribeUseCases()
+
+        setInitState()
     }
 
     override fun onDestroy() {
@@ -66,6 +68,7 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         disposableBag.dispose()
     }
 
+    // Control behavior.
     private fun subscribeUseCases() {
         // Add article.
         RxView.clicks(add_article_btn)
@@ -82,6 +85,15 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
             }.addTo(disposableBag)
     }
 
+    // Control behavior.
+    private fun setInitState() {
+        if (repository.getArticles().size == 0) {
+            repository.mergeDefaultArticles()
+        }
+
+        onUpdate(repository.getArticles())
+    }
+
     // View behavior.
     private fun onUpdate(articles: MutableList<Article>) {
         viewData.clear()
@@ -89,6 +101,7 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         adapter.notifyDataSetChanged()
     }
 
+    // View behavior.
     private fun showArticleContent(article: Article) {
 
         adapter.hideDetail()
@@ -114,6 +127,7 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     }
 
+    // View behavior.
     private fun hideArticleContent() {
 
         adapter.showDetail()
@@ -136,6 +150,7 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         TransitionManager.beginDelayedTransition(layout, transition)
     }
 
+    // Control behavior.
     override fun onItemClick(view: View, article: Article) {
         showArticleContent(article)
     }
