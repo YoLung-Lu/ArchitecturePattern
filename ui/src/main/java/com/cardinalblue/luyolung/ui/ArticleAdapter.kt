@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.repository.model.Article
 
-class ArticleAdapter(context: Context, private val articleData: List<Article>):
+class ArticleAdapter(context: Context, private val articleData: MutableList<Article>):
     RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
     // State.
@@ -100,6 +100,11 @@ class ArticleAdapter(context: Context, private val articleData: List<Article>):
             it.hideDetail()
         }
         showDetail = false
+    }
+
+    fun setData(newArticleData: List<Article>) {
+        articleData.clear()
+        articleData.addAll(newArticleData)
     }
 
     internal fun getItem(id: Int): Article {

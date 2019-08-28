@@ -4,11 +4,11 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import com.cardinalblue.luyolung.repository.model.Article
 
-class ArticleRepository(private val wordDao: ArticleDao) {
+class ArticleRepository(private val articleDao: ArticleDao) {
 
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
-    val allWords: LiveData<List<Article>> = wordDao.getAlphabetizedWords()
+    val allArticles: LiveData<List<Article>> = articleDao.getAlphabetizedWords()
 
     // You must call this on a non-UI thread or your app will crash. So we're making this a
     // suspend function so the caller methods know this.
@@ -17,11 +17,11 @@ class ArticleRepository(private val wordDao: ArticleDao) {
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insert(word: Article) {
-        wordDao.insert(word)
+        articleDao.insert(word)
     }
 
     @WorkerThread
     suspend fun delete(word: Article) {
-        wordDao.delete(word)
+        articleDao.delete(word)
     }
 }

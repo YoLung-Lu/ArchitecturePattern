@@ -58,6 +58,7 @@ dependencies {
     // Package.
     implementation project(":mvc")
     implementation project(":mvp")
+    implementation project(":mvvm")
     implementation project(":repository")
 
 
