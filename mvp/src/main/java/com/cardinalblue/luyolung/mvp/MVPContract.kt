@@ -8,6 +8,6 @@ interface MVPContract {
     }
 
     interface ArticleView {
-        fun onUpdate(articles: MutableList<Article>)
+        fun onUpdate(articles: List<Article>)
     }
 }

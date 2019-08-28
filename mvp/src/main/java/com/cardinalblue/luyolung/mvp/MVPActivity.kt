@@ -61,7 +61,7 @@ class MVPActivity : AppCompatActivity(), MVPContract.ArticleView, ArticleAdapter
     }
 
     // View behavior.
-    override fun onUpdate(articles: MutableList<Article>) {
+    override fun onUpdate(articles: List<Article>) {
         viewData.clear()
         viewData.addAll(articles)
         adapter.notifyDataSetChanged()

@@ -1,4 +1,4 @@
-package com.cardinalblue.luyolung.mvc.second
+package com.cardinalblue.luyolung.mvvm.second
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,21 +10,20 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cardinalblue.luyolung.repository.database.sharepref.SharePrefRepository
 import com.cardinalblue.luyolung.repository.model.Article
-import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.ui.ArticleAdapter
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import kotlinx.android.synthetic.main.activity_mvc.*
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.cardinalblue.luyolung.mvc.R
+import com.cardinalblue.luyolung.mvvm.R
+import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleContentView
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.rxkotlin.addTo
+import kotlinx.android.synthetic.main.activity_mvvm.*
 
 
-class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapter.ItemClickListener {
+class MVVMRXActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     private lateinit var contentView: ArticleContentView
     private lateinit var articleListView: RecyclerView
@@ -34,13 +33,14 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
     private val viewData: MutableList<Article> = mutableListOf()
     private lateinit var adapter: ArticleAdapter
 
-    private lateinit var controller: MVCController
+    private lateinit var articleListViewModel: ArticleListRXViewModel
+    private lateinit var articleViewModel: ArticleRXViewModel
 
     private val disposableBag = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_mvc)
+        setContentView(R.layout.activity_mvvm)
 
         // View.
         contentView = findViewById(R.id.article_content)
@@ -56,13 +56,12 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
         val dividerItemDecoration = DividerItemDecoration(articleListView.context, RecyclerView.VERTICAL)
         articleListView.addItemDecoration(dividerItemDecoration)
 
-        // Repository.
-        val repository = SharePrefRepository()
-        repository.setDefaultArticle(getDefaultArticle())
+        // View model.
+        articleListViewModel = ArticleListRXViewModel(getDefaultArticle())
+        articleViewModel = ArticleRXViewModel()
 
-        // Controller and Use cases.
-        controller = MVCController(repository, this)
-        subscribeUseCases(controller)
+        subscribeUseCases()
+        subscribeViewModel()
     }
 
     override fun onDestroy() {
@@ -70,29 +69,38 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
         disposableBag.dispose()
     }
 
-    private fun subscribeUseCases(controller: MVCController) {
+    private fun subscribeUseCases() {
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
                 val article = ArticleGenerator.randomArticle()
-                controller.createNewArticle(article)
+                articleListViewModel.add(article)
             }.addTo(disposableBag)
 
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                controller.backFromArticle()
+                articleViewModel.clear()
             }.addTo(disposableBag)
     }
 
-    // View behavior.
-    override fun onUpdate(articles: List<Article>) {
-        viewData.clear()
-        viewData.addAll(articles)
-        adapter.notifyDataSetChanged()
+    private fun subscribeViewModel() {
+        // Change of article list.
+        articleListViewModel.articleListSubject.subscribe {
+            onUpdate(it)
+        }.addTo(disposableBag)
+
+        // Change of viewing article.
+        articleViewModel.articleSubject.subscribe { article ->
+            if (!article.isEmpty) {
+                showArticleContent(article.value!!)
+            } else {
+                hideArticleContent()
+            }
+        }.addTo(disposableBag)
     }
 
-    override fun showArticleContent(article: Article) {
+    private fun showArticleContent(article: Article) {
 
         adapter.hideDetail()
 
@@ -117,7 +125,7 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
 
     }
 
-    override fun hideArticleContent() {
+    private fun hideArticleContent() {
 
         adapter.showDetail()
 
@@ -140,7 +148,14 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
     }
 
     override fun onItemClick(view: View, article: Article) {
-        controller.selectArticle(article)
+        articleViewModel.setArticle(article)
+    }
+
+    // View behavior.
+    fun onUpdate(articles: List<Article>) {
+        viewData.clear()
+        viewData.addAll(articles)
+        adapter.notifyDataSetChanged()
     }
 
     // Another UI layer behavior.

@@ -8,6 +8,7 @@ import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC1
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC2
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVP
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVVM1
+import com.cardinalblue.luyolung.architecturepattern.UseCase.MVVM2
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.architecturepattern.UseCaseAdapter.ItemClickListener
@@ -15,6 +16,7 @@ import com.cardinalblue.luyolung.mvc.first.MVCBasicActivity
 import com.cardinalblue.luyolung.mvc.second.MVCActivity
 import com.cardinalblue.luyolung.mvp.MVPActivity
 import com.cardinalblue.luyolung.mvvm.MVVMActivity
+import com.cardinalblue.luyolung.mvvm.second.MVVMRXActivity
 
 class MainActivity : AppCompatActivity(), ItemClickListener {
 
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
         useCases.add(MVC2)
         useCases.add(MVP)
         useCases.add(MVVM1)
+        useCases.add(MVVM2)
 
         // set up the RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
                 MVC2 -> Intent(this, MVCActivity::class.java)
                 MVP -> Intent(this, MVPActivity::class.java)
                 MVVM1 -> Intent(this, MVVMActivity::class.java)
+                MVVM2 -> Intent(this, MVVMRXActivity::class.java)
                 else -> null
             }
 
