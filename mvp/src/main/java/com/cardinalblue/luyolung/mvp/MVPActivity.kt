@@ -12,6 +12,7 @@ import com.cardinalblue.luyolung.ui.ArticleAdapter
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_mvp.*
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
 
@@ -54,7 +55,7 @@ class MVPActivity : AppCompatActivity(), MVPContract.ArticleView, ArticleAdapter
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = Article(null, "2", "3", "廢文", -10, "4", "5")
+                val article = ArticleGenerator.randomArticle()
                 presenter.createNewArticle(article)
             }.addTo(disposableBag)
     }

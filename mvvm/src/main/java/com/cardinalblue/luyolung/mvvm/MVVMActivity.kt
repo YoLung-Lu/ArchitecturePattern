@@ -18,6 +18,7 @@ import io.reactivex.disposables.CompositeDisposable
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvvm.first.ArticleListViewModel
 import com.cardinalblue.luyolung.mvvm.first.ArticleViewModel
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleContentView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
@@ -74,7 +75,7 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = Article(null, "2", "3", "廢文", -10, "4", "5")
+                val article = ArticleGenerator.randomArticle()
                 articleListViewModel.insert(article)
             }.addTo(disposableBag)
 

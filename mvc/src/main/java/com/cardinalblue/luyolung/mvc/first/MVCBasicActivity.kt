@@ -20,6 +20,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvc.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvc.R
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleContentView
 
 
@@ -73,7 +74,7 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = Article(null, "2", "3", "廢文", -10, "4", "5")
+                val article = ArticleGenerator.randomArticle()
                 repository.addArticle(article)
                 onUpdate(repository.getArticles())
             }.addTo(disposableBag)
