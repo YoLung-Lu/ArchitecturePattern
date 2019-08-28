@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC1
+import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC2
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVP
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.architecturepattern.UseCaseAdapter.ItemClickListener
-import com.cardinalblue.luyolung.mvc.MVCActivity
+import com.cardinalblue.luyolung.mvc.first.MVCBasicActivity
+import com.cardinalblue.luyolung.mvc.second.MVCActivity
 import com.cardinalblue.luyolung.mvp.MVPActivity
 
 class MainActivity : AppCompatActivity(), ItemClickListener {
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
         val useCases = mutableListOf<UseCase>()
         useCases.add(MVC1)
+        useCases.add(MVC2)
         useCases.add(MVP)
 
         // set up the RecyclerView
@@ -36,7 +39,8 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
     override fun onItemClick(view: View, useCase: UseCase) {
         val navigateIntent: Intent? =
             when (useCase) {
-                MVC1 -> Intent(this, MVCActivity::class.java)
+                MVC1 -> Intent(this, MVCBasicActivity::class.java)
+                MVC2 -> Intent(this, MVCActivity::class.java)
                 MVP -> Intent(this, MVPActivity::class.java)
                 else -> null
             }

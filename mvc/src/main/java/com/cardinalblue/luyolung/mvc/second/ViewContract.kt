@@ -1,4 +1,4 @@
-package com.cardinalblue.luyolung.mvc
+package com.cardinalblue.luyolung.mvc.second
 
 import com.cardinalblue.luyolung.repository.model.Article
 

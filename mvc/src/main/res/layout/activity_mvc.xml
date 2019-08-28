@@ -6,7 +6,7 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MVCActivity">
+        tools:context=".second.MVCActivity">
 
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_list"
@@ -56,6 +56,7 @@
             android:layout_marginStart="6dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_directions_bike_blue_24dp"
+            android:visibility="invisible"
             app:layout_constraintLeft_toRightOf="@id/add_article_btn"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/article_list"

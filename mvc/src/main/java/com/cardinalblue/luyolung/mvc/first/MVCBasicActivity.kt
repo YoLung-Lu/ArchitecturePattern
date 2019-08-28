@@ -1,4 +1,4 @@
-package com.cardinalblue.luyolung.mvc
+package com.cardinalblue.luyolung.mvc.first
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,12 +19,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvc.*
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.cardinalblue.luyolung.mvc.R
 import com.cardinalblue.luyolung.ui.ArticleContentView
 
 
-class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapter.ItemClickListener {
+class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
-    lateinit var contentView: ArticleContentView
+    private lateinit var contentView: ArticleContentView
     private lateinit var articleListView: RecyclerView
     private lateinit var guideline: Guideline
     private lateinit var layout: ConstraintLayout
@@ -32,7 +33,7 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
     private val viewData: MutableList<Article> = mutableListOf()
     private lateinit var adapter: ArticleAdapter
 
-    private lateinit var controller: MVCController
+    private val repository = SharePrefRepository()
 
     private val disposableBag = CompositeDisposable()
 
@@ -55,12 +56,9 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
         articleListView.addItemDecoration(dividerItemDecoration)
 
         // Repository.
-        val repository = SharePrefRepository()
         repository.setDefaultArticle(getDefaultArticle())
 
-        // Controller and Use cases.
-        controller = MVCController(repository, this)
-        subscribeUseCases(controller)
+        subscribeUseCases()
     }
 
     override fun onDestroy() {
@@ -68,31 +66,30 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
         disposableBag.dispose()
     }
 
-    private fun subscribeUseCases(controller: MVCController) {
+    private fun subscribeUseCases() {
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
                 val article = Article(null, "2", "3", "廢文", -10, "4", "5")
-                controller.createNewArticle(article)
+                repository.addArticle(article)
+                onUpdate(repository.getArticles())
             }.addTo(disposableBag)
 
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                controller.backFromArticle()
+                hideArticleContent()
             }.addTo(disposableBag)
-
-        back_btn.visibility = View.INVISIBLE
     }
 
     // View behavior.
-    override fun onUpdate(articles: MutableList<Article>) {
+    private fun onUpdate(articles: MutableList<Article>) {
         viewData.clear()
         viewData.addAll(articles)
         adapter.notifyDataSetChanged()
     }
 
-    override fun showArticleContent(article: Article) {
+    private fun showArticleContent(article: Article) {
 
         adapter.hideDetail()
 
@@ -103,9 +100,11 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
         // Shift layout.
         val set = ConstraintSet()
         set.clone(layout)
-        set.connect(R.id.article_list, ConstraintSet.RIGHT,
+        set.connect(
+            R.id.article_list, ConstraintSet.RIGHT,
                     guideline.id, ConstraintSet.RIGHT)
-        set.connect(R.id.article_content, ConstraintSet.LEFT,
+        set.connect(
+            R.id.article_content, ConstraintSet.LEFT,
                     guideline.id, ConstraintSet.RIGHT)
         set.applyTo(layout)
 
@@ -115,7 +114,7 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
 
     }
 
-    override fun hideArticleContent() {
+    private fun hideArticleContent() {
 
         adapter.showDetail()
 
@@ -124,9 +123,11 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
         // Shift layout.
         val set = ConstraintSet()
         set.clone(layout)
-        set.connect(R.id.article_list, ConstraintSet.RIGHT,
+        set.connect(
+            R.id.article_list, ConstraintSet.RIGHT,
             layout.id, ConstraintSet.RIGHT)
-        set.connect(R.id.article_content, ConstraintSet.LEFT,
+        set.connect(
+            R.id.article_content, ConstraintSet.LEFT,
             layout.id, ConstraintSet.RIGHT)
         set.applyTo(layout)
 
@@ -136,7 +137,7 @@ class MVCActivity : AppCompatActivity(), ViewContract.ArticleView, ArticleAdapte
     }
 
     override fun onItemClick(view: View, article: Article) {
-        controller.selectArticle(article)
+        showArticleContent(article)
     }
 
     // Another UI layer behavior.
