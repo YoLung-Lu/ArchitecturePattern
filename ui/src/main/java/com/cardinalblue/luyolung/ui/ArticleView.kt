@@ -15,10 +15,10 @@ import com.cardinalblue.luyolung.repository.model.Article
 class ArticleView: ConstraintLayout {
 
     private lateinit var adapter: ArticleAdapter
-    private lateinit var contentView: ArticleContentView
-    private lateinit var articleListView: RecyclerView
-    private lateinit var guideline: Guideline
-    private lateinit var layout: ConstraintLayout
+    private var contentView: ArticleContentView
+    private var articleListView: RecyclerView
+    private var guideline: Guideline
+    private var layout: ConstraintLayout
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -44,17 +44,6 @@ class ArticleView: ConstraintLayout {
         articleListView.adapter = adapter
     }
 
-    fun setArticle(article: Article) {
-        contentView.setArticle(article)
-    }
-
-
-    // View behavior.
-    fun onUpdate(articles: List<Article>) {
-        adapter.setData(articles)
-        adapter.notifyDataSetChanged()
-    }
-
     fun showArticleContent(article: Article) {
 
         adapter.hideDetail()
@@ -75,7 +64,6 @@ class ArticleView: ConstraintLayout {
         // Animation.
         val transition = ChangeBounds()
         TransitionManager.beginDelayedTransition(layout, transition)
-
     }
 
     fun hideArticleContent() {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="one_dp">1dp</dimen>
-
+    <dimen name="article_height">0.9</dimen>
     <dimen name="list_width">300dp</dimen>
     <dimen name="category_width">50dp</dimen>
     <dimen name="title_height">50dp</dimen>

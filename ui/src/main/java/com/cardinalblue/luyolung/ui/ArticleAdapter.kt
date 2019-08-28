@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.repository.model.Article
+import io.reactivex.subjects.PublishSubject
 
 class ArticleAdapter(context: Context, private val articleData: MutableList<Article>):
     RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
@@ -17,8 +18,11 @@ class ArticleAdapter(context: Context, private val articleData: MutableList<Arti
     private var showDetail = true
 
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
-    private var mClickListener: ItemClickListener? = null
     private val holders = mutableListOf<ViewHolder>()
+
+    // Callback.
+    private var mClickListener: ItemClickListener? = null
+    private var clickedArticle: PublishSubject<Article>? = null
 
     // inflates the row layout from xml when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -60,7 +64,9 @@ class ArticleAdapter(context: Context, private val articleData: MutableList<Arti
         }
 
         override fun onClick(view: View) {
-            if (mClickListener != null) mClickListener!!.onItemClick(view, articleData[adapterPosition])
+            val clickedData = articleData[adapterPosition]
+            mClickListener?.onItemClick(view, clickedData)
+            clickedArticle?.onNext(clickedData)
         }
 
         fun showDetail() {
@@ -109,6 +115,10 @@ class ArticleAdapter(context: Context, private val articleData: MutableList<Arti
 
     internal fun getItem(id: Int): Article {
         return articleData[id]
+    }
+
+    fun setClickSubject(clickedArticle: PublishSubject<Article>) {
+        this.clickedArticle = clickedArticle
     }
 
     fun setClickListener(itemClickListener: ItemClickListener) {

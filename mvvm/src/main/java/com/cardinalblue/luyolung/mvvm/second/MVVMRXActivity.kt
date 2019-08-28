@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvvm.R
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
+import com.cardinalblue.luyolung.ui.ArticleAdapter
 import com.cardinalblue.luyolung.ui.ArticleContentView
-import com.cardinalblue.luyolung.ui.ArticleRXAdapter
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
@@ -31,7 +31,7 @@ class MVVMRXActivity : AppCompatActivity() {
     private lateinit var guideline: Guideline
     private lateinit var layout: ConstraintLayout
 
-    private lateinit var adapter: ArticleRXAdapter
+    private lateinit var adapter: ArticleAdapter
 
     private lateinit var articleListViewModel: ArticleListRXViewModel
     private lateinit var articleViewModel: ArticleRXViewModel
@@ -51,7 +51,7 @@ class MVVMRXActivity : AppCompatActivity() {
         layout = findViewById(R.id.layout)
         articleListView.layoutManager = LinearLayoutManager(this)
 
-        adapter  = ArticleRXAdapter(this, mutableListOf())
+        adapter = ArticleAdapter(this, mutableListOf())
         adapter.setClickSubject(clickedArticle)
         articleListView.adapter = adapter
 
