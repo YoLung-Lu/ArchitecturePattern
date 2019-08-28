@@ -5,19 +5,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.repository.model.Article
 
 class ArticleAdapter(context: Context, private val articleData: List<Article>):
     RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
+    // State.
+    private var showDetail = true
+
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var mClickListener: ItemClickListener? = null
+    private val holders = mutableListOf<ViewHolder>()
 
     // inflates the row layout from xml when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = mInflater.inflate(R.layout.item_article, parent, false)
-        return ViewHolder(view)
+        val holder = ViewHolder(view)
+        holders.add(holder)
+        if (!showDetail) {
+            holder.hideDetail()
+        }
+        return holder
     }
 
     // binds the data to the TextView in each row
@@ -42,6 +53,7 @@ class ArticleAdapter(context: Context, private val articleData: List<Article>):
         internal var idTextView: TextView = itemView.findViewById(R.id.article_id)
         internal var authorTextView: TextView = itemView.findViewById(R.id.article_author)
         internal var timeTextView: TextView = itemView.findViewById(R.id.article_time)
+        internal var guideLineView: Guideline = itemView.findViewById(R.id.guide_between_category_title)
 
         init {
             itemView.setOnClickListener(this)
@@ -50,6 +62,44 @@ class ArticleAdapter(context: Context, private val articleData: List<Article>):
         override fun onClick(view: View) {
             if (mClickListener != null) mClickListener!!.onItemClick(view, articleData[adapterPosition])
         }
+
+        fun showDetail() {
+            categoryTextView.visibility = View.VISIBLE
+            pushTextView.visibility = View.VISIBLE
+            idTextView.visibility = View.VISIBLE
+            authorTextView.visibility = View.VISIBLE
+            timeTextView.visibility = View.VISIBLE
+
+            val params = guideLineView.layoutParams as ConstraintLayout.LayoutParams
+            params.guideBegin = 50
+            guideLineView.layoutParams = params
+        }
+
+        fun hideDetail() {
+            categoryTextView.visibility = View.GONE
+            pushTextView.visibility = View.GONE
+            idTextView.visibility = View.GONE
+            authorTextView.visibility = View.GONE
+            timeTextView.visibility = View.GONE
+
+            val params = guideLineView.layoutParams as ConstraintLayout.LayoutParams
+            params.guideBegin = 0
+            guideLineView.layoutParams = params
+        }
+    }
+
+    fun showDetail() {
+        holders.forEach {
+            it.showDetail()
+        }
+        showDetail = true
+    }
+
+    fun hideDetail() {
+        holders.forEach {
+            it.hideDetail()
+        }
+        showDetail = false
     }
 
     internal fun getItem(id: Int): Article {

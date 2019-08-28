@@ -18,4 +18,12 @@ class MVCController(private val repository: SharePrefRepository,
         repository.addArticle(article)
         view.onUpdate(repository.getArticles())
     }
+
+    fun selectArticle(article: Article) {
+        view.showArticleContent(article)
+    }
+
+    fun backFromArticle() {
+        view.hideArticleContent()
+    }
 }
