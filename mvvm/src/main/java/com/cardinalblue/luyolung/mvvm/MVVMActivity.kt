@@ -13,12 +13,14 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.repository.model.Article
-import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.ui.ArticleAdapter
 import io.reactivex.disposables.CompositeDisposable
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvvm.first.ArticleListViewModel
+import com.cardinalblue.luyolung.mvvm.first.ArticleViewModel
 import com.cardinalblue.luyolung.ui.ArticleContentView
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvvm.*
 
 
@@ -33,6 +35,7 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
     private lateinit var adapter: ArticleAdapter
 
     private lateinit var articleListViewModel: ArticleListViewModel
+    private lateinit var articleViewModel: ArticleViewModel
 
     private val disposableBag = CompositeDisposable()
 
@@ -47,8 +50,6 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         layout = findViewById(R.id.layout)
         articleListView.layoutManager = LinearLayoutManager(this)
 
-        articleListViewModel = ViewModelProviders.of(this).get(ArticleListViewModel::class.java)
-
         adapter  = ArticleAdapter(this, viewData)
         adapter.setClickListener(this)
         articleListView.adapter = adapter
@@ -56,13 +57,12 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         val dividerItemDecoration = DividerItemDecoration(articleListView.context, RecyclerView.VERTICAL)
         articleListView.addItemDecoration(dividerItemDecoration)
 
-        articleListViewModel.allArticles.observe(this, Observer { articles ->
-            articles?.let {
-                adapter.setData(it)
-                adapter.notifyDataSetChanged()
-            }
-        })
+        // View model.
+        articleListViewModel = ViewModelProviders.of(this).get(ArticleListViewModel::class.java)
+        articleViewModel = ViewModelProviders.of(this).get(ArticleViewModel::class.java)
 
+        subscribeUseCases()
+        subscribeViewModel()
     }
 
     override fun onDestroy() {
@@ -70,29 +70,42 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         disposableBag.dispose()
     }
 
-//    private fun subscribeUseCases() {
-//        // Add article.
-//        RxView.clicks(add_article_btn)
-//            .subscribe {
-//                val article = Article(null, "2", "3", "廢文", -10, "4", "5")
-//                controller.createNewArticle(article)
-//            }.addTo(disposableBag)
-//
-//        // Back from article content.
-//        RxView.clicks(back_btn)
-//            .subscribe {
-//                controller.backFromArticle()
-//            }.addTo(disposableBag)
-//    }
+    private fun subscribeUseCases() {
+        // Add article.
+        RxView.clicks(add_article_btn)
+            .subscribe {
+                val article = Article(null, "2", "3", "廢文", -10, "4", "5")
+                articleListViewModel.insert(article)
+            }.addTo(disposableBag)
 
-    // View behavior.
-    fun onUpdate(articles: MutableList<Article>) {
-        viewData.clear()
-        viewData.addAll(articles)
-        adapter.notifyDataSetChanged()
+        // Back from article content.
+        RxView.clicks(back_btn)
+            .subscribe {
+                articleViewModel.setArticle(null)
+            }.addTo(disposableBag)
     }
 
-    fun showArticleContent(article: Article) {
+    private fun subscribeViewModel() {
+        // Change of article list.
+        articleListViewModel.allArticles.observe(this, Observer { articles ->
+            articles?.let {
+                adapter.setData(it)
+                adapter.notifyDataSetChanged()
+            }
+        })
+
+        // Change of viewing article.
+        articleViewModel.article().observe(this, Observer { article ->
+            if (article != null) {
+                showArticleContent(article)
+            } else {
+                // null -> hide article.
+                hideArticleContent()
+            }
+        })
+    }
+
+    private fun showArticleContent(article: Article) {
 
         adapter.hideDetail()
 
@@ -117,7 +130,7 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     }
 
-    fun hideArticleContent() {
+    private fun hideArticleContent() {
 
         adapter.showDetail()
 
@@ -140,16 +153,6 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
     }
 
     override fun onItemClick(view: View, article: Article) {
-        println("")
-//        controller.selectArticle(article)
-    }
-
-    // Another UI layer behavior.
-    private fun getDefaultArticle(): List<Article> {
-        val resource = resources.openRawResource(R.raw.raw_data)
-            .bufferedReader()
-            .use { input -> input.readText() }
-
-        return ArticleConverter.stringToArticleData(resource)
+        articleViewModel.setArticle(article)
     }
 }
