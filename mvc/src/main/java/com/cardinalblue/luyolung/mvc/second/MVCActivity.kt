@@ -31,7 +31,6 @@ class MVCActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
     private lateinit var guideline: Guideline
     private lateinit var layout: ConstraintLayout
 
-    private val viewData: MutableList<Article> = mutableListOf()
     private lateinit var adapter: ArticleAdapter
 
     private lateinit var controller: MVCController
@@ -49,7 +48,7 @@ class MVCActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         layout = findViewById(R.id.layout)
         articleListView.layoutManager = LinearLayoutManager(this)
 
-        adapter  = ArticleAdapter(this, viewData)
+        adapter  = ArticleAdapter(this, mutableListOf())
         adapter.setClickListener(this)
         articleListView.adapter = adapter
 
@@ -87,8 +86,7 @@ class MVCActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     // View behavior.
     fun onUpdate(articles: List<Article>) {
-        viewData.clear()
-        viewData.addAll(articles)
+        adapter.setData(articles)
         adapter.notifyDataSetChanged()
     }
 
