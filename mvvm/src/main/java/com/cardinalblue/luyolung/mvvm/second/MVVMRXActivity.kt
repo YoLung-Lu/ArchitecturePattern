@@ -11,30 +11,32 @@ import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.repository.model.Article
-import com.cardinalblue.luyolung.ui.ArticleAdapter
 import io.reactivex.disposables.CompositeDisposable
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvvm.R
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleContentView
+import com.cardinalblue.luyolung.ui.ArticleRXAdapter
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_mvvm.*
 
 
-class MVVMRXActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
+class MVVMRXActivity : AppCompatActivity() {
 
     private lateinit var contentView: ArticleContentView
     private lateinit var articleListView: RecyclerView
     private lateinit var guideline: Guideline
     private lateinit var layout: ConstraintLayout
 
-    private val viewData: MutableList<Article> = mutableListOf()
-    private lateinit var adapter: ArticleAdapter
+    private lateinit var adapter: ArticleRXAdapter
 
     private lateinit var articleListViewModel: ArticleListRXViewModel
     private lateinit var articleViewModel: ArticleRXViewModel
+
+    private val clickedArticle: PublishSubject<Article> = PublishSubject.create()
 
     private val disposableBag = CompositeDisposable()
 
@@ -49,8 +51,8 @@ class MVVMRXActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         layout = findViewById(R.id.layout)
         articleListView.layoutManager = LinearLayoutManager(this)
 
-        adapter  = ArticleAdapter(this, viewData)
-        adapter.setClickListener(this)
+        adapter  = ArticleRXAdapter(this, mutableListOf())
+        adapter.setClickSubject(clickedArticle)
         articleListView.adapter = adapter
 
         val dividerItemDecoration = DividerItemDecoration(articleListView.context, RecyclerView.VERTICAL)
@@ -82,6 +84,11 @@ class MVVMRXActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
             .subscribe {
                 articleViewModel.clear()
             }.addTo(disposableBag)
+
+        // Clicked article.
+        clickedArticle.subscribe { article ->
+            articleViewModel.setArticle(article)
+        }.addTo(disposableBag)
     }
 
     private fun subscribeViewModel() {
@@ -147,14 +154,9 @@ class MVVMRXActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         TransitionManager.beginDelayedTransition(layout, transition)
     }
 
-    override fun onItemClick(view: View, article: Article) {
-        articleViewModel.setArticle(article)
-    }
-
     // View behavior.
-    fun onUpdate(articles: List<Article>) {
-        viewData.clear()
-        viewData.addAll(articles)
+    private fun onUpdate(articles: List<Article>) {
+        adapter.setData(articles)
         adapter.notifyDataSetChanged()
     }
 
