@@ -6,7 +6,8 @@
             android:label="@string/app_name"
             android:supportsRtl="true">
 
-        <activity android:name=".MVPActivity"/>
+        <activity android:name=".first.MVPActivity"/>
+        <activity android:name=".second.MVPArticleViewActivity"/>
 
     </application>
 </manifest>

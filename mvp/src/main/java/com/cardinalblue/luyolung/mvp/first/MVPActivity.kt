@@ -1,4 +1,4 @@
-package com.cardinalblue.luyolung.mvp
+package com.cardinalblue.luyolung.mvp.first
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +12,7 @@ import com.cardinalblue.luyolung.ui.ArticleAdapter
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_mvp.*
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.cardinalblue.luyolung.mvp.R
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
