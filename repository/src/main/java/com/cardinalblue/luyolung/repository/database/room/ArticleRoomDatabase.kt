@@ -36,7 +36,7 @@ abstract class ArticleRoomDatabase: RoomDatabase() {
                     // Migration is not part of this codelab.
                     .fallbackToDestructiveMigration()
                     .addCallback(
-                        WordDatabaseCallback(
+                        ArticleDatabaseCallback(
                             scope
                         )
                     )
@@ -47,7 +47,7 @@ abstract class ArticleRoomDatabase: RoomDatabase() {
             }
         }
 
-        private class WordDatabaseCallback(
+        private class ArticleDatabaseCallback(
             private val scope: CoroutineScope
         ) : RoomDatabase.Callback() {
             /**
@@ -70,17 +70,16 @@ abstract class ArticleRoomDatabase: RoomDatabase() {
 
         /**
          * Populate the database in a new coroutine.
-         * If you want to start with more words, just add them.
          */
-        fun populateDatabase(wordDao: ArticleDao) {
+        fun populateDatabase(articleDao: ArticleDao) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-            wordDao.deleteAll()
+            articleDao.deleteAll()
 
             val article1 = Article(null, "Hello", "Allen", "廢文", 999, "This is the content", "25-08-2019")
-            wordDao.insert(article1)
+            articleDao.insert(article1)
             val article2 = Article(null, "Testing", "Beta", "廢文", -50, "~~~~~~~", "25-08-2019")
-            wordDao.insert(article2)
+            articleDao.insert(article2)
         }
     }
 

@@ -16,12 +16,12 @@ class ArticleRepository(private val articleDao: ArticleDao) {
     // thread, blocking the UI.
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(word: Article) {
-        articleDao.insert(word)
+    suspend fun insert(article: Article) {
+        articleDao.insert(article)
     }
 
     @WorkerThread
-    suspend fun delete(word: Article) {
-        articleDao.delete(word)
+    suspend fun delete(article: Article) {
+        articleDao.delete(article)
     }
 }

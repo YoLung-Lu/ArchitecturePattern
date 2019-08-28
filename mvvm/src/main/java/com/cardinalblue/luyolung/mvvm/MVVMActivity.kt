@@ -56,9 +56,8 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         val dividerItemDecoration = DividerItemDecoration(articleListView.context, RecyclerView.VERTICAL)
         articleListView.addItemDecoration(dividerItemDecoration)
 
-        articleListViewModel.allArticles.observe(this, Observer { words ->
-            // Update the cached copy of the words in the adapter.
-            words?.let {
+        articleListViewModel.allArticles.observe(this, Observer { articles ->
+            articles?.let {
                 adapter.setData(it)
                 adapter.notifyDataSetChanged()
             }
