@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC1
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC2
+import com.cardinalblue.luyolung.architecturepattern.UseCase.MVC3
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVP1
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVP2
 import com.cardinalblue.luyolung.architecturepattern.UseCase.MVVM1
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.architecturepattern.UseCaseAdapter.ItemClickListener
 import com.cardinalblue.luyolung.mvc.first.AllInOneActivity
 import com.cardinalblue.luyolung.mvc.second.MVCActivity
+import com.cardinalblue.luyolung.mvc.third.MVCActiveRepositoryActivity
 import com.cardinalblue.luyolung.mvp.first.MVPActivity
 import com.cardinalblue.luyolung.mvp.second.MVPArticleViewActivity
 import com.cardinalblue.luyolung.mvvm.first.MVVMActivity
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
         val useCases = mutableListOf<UseCase>()
         useCases.add(MVC1)
         useCases.add(MVC2)
+        useCases.add(MVC3)
         useCases.add(MVP1)
         useCases.add(MVP2)
         useCases.add(MVVM1)
@@ -50,6 +53,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
             when (useCase) {
                 MVC1 -> Intent(this, AllInOneActivity::class.java)
                 MVC2 -> Intent(this, MVCActivity::class.java)
+                MVC3 -> Intent(this, MVCActiveRepositoryActivity::class.java)
                 MVP1 -> Intent(this, MVPActivity::class.java)
                 MVP2 -> Intent(this, MVPArticleViewActivity::class.java)
                 MVVM1 -> Intent(this, MVVMActivity::class.java)

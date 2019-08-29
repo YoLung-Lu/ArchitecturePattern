@@ -8,6 +8,7 @@
 
         <activity android:name=".first.AllInOneActivity"/>
         <activity android:name=".second.MVCActivity"/>
+        <activity android:name=".third.MVCActiveRepositoryActivity"/>
 
     </application>
 </manifest>
