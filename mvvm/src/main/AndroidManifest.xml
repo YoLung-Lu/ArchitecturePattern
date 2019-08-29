@@ -8,6 +8,7 @@
 
         <activity android:name=".first.MVVMActivity"/>
         <activity android:name=".second.MVVMRXActivity"/>
+        <activity android:name=".third.MVVMWrapRXActivity"/>
 
     </application>
 </manifest>

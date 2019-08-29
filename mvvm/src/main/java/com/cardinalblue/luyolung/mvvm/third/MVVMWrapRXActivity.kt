@@ -1,4 +1,4 @@
-package com.cardinalblue.luyolung.mvvm.second
+package com.cardinalblue.luyolung.mvvm.third
 
 import android.os.Bundle
 import android.view.View
@@ -16,14 +16,13 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_mvvm.*
 
 
-class MVVMRXActivity : AppCompatActivity() {
+class MVVMWrapRXActivity : AppCompatActivity() {
 
     private lateinit var articleView: ArticleView
 
     private lateinit var adapter: ArticleAdapter
 
-    private lateinit var articleListViewModel: ArticleListRXViewModel
-    private lateinit var articleViewModel: ArticleRXViewModel
+    private lateinit var articleListViewModel: ArticleListWrapRxViewModel
 
     private val clickedArticle: PublishSubject<Article> = PublishSubject.create()
 
@@ -41,8 +40,7 @@ class MVVMRXActivity : AppCompatActivity() {
         articleView.setAdapter(adapter)
 
         // View model.
-        articleListViewModel = ArticleListRXViewModel(getDefaultArticle())
-        articleViewModel = ArticleRXViewModel()
+        articleListViewModel = ArticleListWrapRxViewModel(getDefaultArticle())
 
         subscribeUseCases()
         subscribeViewModel()
@@ -64,13 +62,13 @@ class MVVMRXActivity : AppCompatActivity() {
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                articleViewModel.clear()
+                articleListViewModel.setSelectedArticle(null)
             }.addTo(disposableBag)
 
         // Clicked article.
         clickedArticle
             .subscribe { article ->
-                articleViewModel.setArticle(article)
+                articleListViewModel.setSelectedArticle(article)
             }.addTo(disposableBag)
     }
 
@@ -82,27 +80,34 @@ class MVVMRXActivity : AppCompatActivity() {
             }.addTo(disposableBag)
 
         // Change of viewing article.
-        articleViewModel.articleSubject
-            .subscribe { article ->
-                if (!article.isEmpty) {
-                    articleView.showArticleContent(article.value!!)
-                } else {
+        articleListViewModel.articleListSubject
+            .map { articles ->
+                articles.filter { it.selected }
+            }
+            .subscribe { articleList ->
+                if (articleList.isEmpty()) {
                     articleView.hideArticleContent()
+                } else {
+                    articleView.showArticleContent(articleList.first().article)
                 }
             }.addTo(disposableBag)
 
         // Back button's visibility.
-        articleViewModel.articleSubject
-            .subscribe { article ->
+        articleListViewModel.articleListSubject
+            .map { articles ->
+                articles.filter { it.selected }
+            }
+            .subscribe { articleList ->
                 back_btn.visibility =
-                    if (!article.isEmpty) View.VISIBLE
+                    if (!articleList.isEmpty()) View.VISIBLE
                     else View.INVISIBLE
             }.addTo(disposableBag)
     }
 
     // View behavior.
-    private fun onUpdate(articles: List<Article>) {
-        adapter.setData(articles)
+    private fun onUpdate(articles: List<ArticleWrapRXViewModel>) {
+        val mapToArticle = articles.map { it.article }
+        adapter.setData(mapToArticle)
         adapter.notifyDataSetChanged()
     }
 
