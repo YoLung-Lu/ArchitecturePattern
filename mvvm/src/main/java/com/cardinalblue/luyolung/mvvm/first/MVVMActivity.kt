@@ -1,35 +1,24 @@
 package com.cardinalblue.luyolung.mvvm.first
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.TransitionManager
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.Guideline
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.cardinalblue.luyolung.repository.model.Article
-import com.cardinalblue.luyolung.ui.ArticleAdapter
-import io.reactivex.disposables.CompositeDisposable
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvvm.R
+import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
-import com.cardinalblue.luyolung.ui.ArticleContentView
+import com.cardinalblue.luyolung.ui.ArticleAdapter
+import com.cardinalblue.luyolung.ui.ArticleView
 import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvvm.*
 
 
 class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
-    private lateinit var contentView: ArticleContentView
-    private lateinit var articleListView: RecyclerView
-    private lateinit var guideline: Guideline
-    private lateinit var layout: ConstraintLayout
+    private lateinit var articleView: ArticleView
 
     private lateinit var adapter: ArticleAdapter
 
@@ -43,18 +32,11 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         setContentView(R.layout.activity_mvvm)
 
         // View.
-        contentView = findViewById(R.id.article_content)
-        articleListView = findViewById(R.id.article_list)
-        guideline = findViewById(R.id.guide_list)
-        layout = findViewById(R.id.layout)
-        articleListView.layoutManager = LinearLayoutManager(this)
+        articleView = findViewById(R.id.article_view)
 
-        adapter  = ArticleAdapter(this, mutableListOf())
+        adapter = ArticleAdapter(this, mutableListOf())
         adapter.setClickListener(this)
-        articleListView.adapter = adapter
-
-        val dividerItemDecoration = DividerItemDecoration(articleListView.context, RecyclerView.VERTICAL)
-        articleListView.addItemDecoration(dividerItemDecoration)
+        articleView.setAdapter(adapter)
 
         // View model.
         articleListViewModel = ViewModelProviders.of(this).get(ArticleListViewModel::class.java)
@@ -86,69 +68,26 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     private fun subscribeViewModel() {
         // Change of article list.
-        articleListViewModel.allArticles.observe(this, Observer { articles ->
-            articles?.let {
-                adapter.setData(it)
-                adapter.notifyDataSetChanged()
-            }
-        })
+        articleListViewModel.allArticles
+            .observe(this, Observer { articles ->
+                articles?.let {
+                    adapter.setData(it)
+                    adapter.notifyDataSetChanged()
+                }
+            })
 
         // Change of viewing article.
-        articleViewModel.article().observe(this, Observer { article ->
-            if (article != null) {
-                showArticleContent(article)
-            } else {
-                // null -> hide article.
-                hideArticleContent()
-            }
-        })
-    }
-
-    private fun showArticleContent(article: Article) {
-
-        adapter.hideDetail()
-
-        back_btn.visibility = View.VISIBLE
-
-        contentView.setArticle(article)
-
-        // Shift layout.
-        val set = ConstraintSet()
-        set.clone(layout)
-        set.connect(
-            R.id.article_list, ConstraintSet.RIGHT,
-                    guideline.id, ConstraintSet.RIGHT)
-        set.connect(
-            R.id.article_content, ConstraintSet.LEFT,
-                    guideline.id, ConstraintSet.RIGHT)
-        set.applyTo(layout)
-
-        // Animation.
-        val transition = ChangeBounds()
-        TransitionManager.beginDelayedTransition(layout, transition)
-
-    }
-
-    private fun hideArticleContent() {
-
-        adapter.showDetail()
-
-        back_btn.visibility = View.INVISIBLE
-
-        // Shift layout.
-        val set = ConstraintSet()
-        set.clone(layout)
-        set.connect(
-            R.id.article_list, ConstraintSet.RIGHT,
-            layout.id, ConstraintSet.RIGHT)
-        set.connect(
-            R.id.article_content, ConstraintSet.LEFT,
-            layout.id, ConstraintSet.RIGHT)
-        set.applyTo(layout)
-
-        // Animation.
-        val transition = ChangeBounds()
-        TransitionManager.beginDelayedTransition(layout, transition)
+        articleViewModel.article()
+            .observe(this, Observer { article ->
+                if (article != null) {
+                    back_btn.visibility = View.VISIBLE
+                    articleView.showArticleContent(article)
+                } else {
+                    // null -> hide article.
+                    back_btn.visibility = View.INVISIBLE
+                    articleView.hideArticleContent()
+                }
+            })
     }
 
     override fun onItemClick(view: View, article: Article) {

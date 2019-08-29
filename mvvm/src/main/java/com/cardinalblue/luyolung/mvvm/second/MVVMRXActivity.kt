@@ -1,24 +1,16 @@
 package com.cardinalblue.luyolung.mvvm.second
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.TransitionManager
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.Guideline
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.cardinalblue.luyolung.repository.model.Article
-import io.reactivex.disposables.CompositeDisposable
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.appcompat.app.AppCompatActivity
 import com.cardinalblue.luyolung.mvvm.R
+import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleAdapter
-import com.cardinalblue.luyolung.ui.ArticleContentView
+import com.cardinalblue.luyolung.ui.ArticleView
 import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_mvvm.*
@@ -26,10 +18,7 @@ import kotlinx.android.synthetic.main.activity_mvvm.*
 
 class MVVMRXActivity : AppCompatActivity() {
 
-    private lateinit var contentView: ArticleContentView
-    private lateinit var articleListView: RecyclerView
-    private lateinit var guideline: Guideline
-    private lateinit var layout: ConstraintLayout
+    private lateinit var articleView: ArticleView
 
     private lateinit var adapter: ArticleAdapter
 
@@ -45,18 +34,11 @@ class MVVMRXActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mvvm)
 
         // View.
-        contentView = findViewById(R.id.article_content)
-        articleListView = findViewById(R.id.article_list)
-        guideline = findViewById(R.id.guide_list)
-        layout = findViewById(R.id.layout)
-        articleListView.layoutManager = LinearLayoutManager(this)
+        articleView = findViewById(R.id.article_view)
 
         adapter = ArticleAdapter(this, mutableListOf())
         adapter.setClickSubject(clickedArticle)
-        articleListView.adapter = adapter
-
-        val dividerItemDecoration = DividerItemDecoration(articleListView.context, RecyclerView.VERTICAL)
-        articleListView.addItemDecoration(dividerItemDecoration)
+        articleView.setAdapter(adapter)
 
         // View model.
         articleListViewModel = ArticleListRXViewModel(getDefaultArticle())
@@ -86,72 +68,36 @@ class MVVMRXActivity : AppCompatActivity() {
             }.addTo(disposableBag)
 
         // Clicked article.
-        clickedArticle.subscribe { article ->
-            articleViewModel.setArticle(article)
-        }.addTo(disposableBag)
+        clickedArticle
+            .subscribe { article ->
+                articleViewModel.setArticle(article)
+            }.addTo(disposableBag)
     }
 
     private fun subscribeViewModel() {
         // Change of article list.
-        articleListViewModel.articleListSubject.subscribe {
-            onUpdate(it)
-        }.addTo(disposableBag)
+        articleListViewModel.articleListSubject
+            .subscribe {
+                onUpdate(it)
+            }.addTo(disposableBag)
 
         // Change of viewing article.
-        articleViewModel.articleSubject.subscribe { article ->
-            if (!article.isEmpty) {
-                showArticleContent(article.value!!)
-            } else {
-                hideArticleContent()
-            }
-        }.addTo(disposableBag)
-    }
+        articleViewModel.articleSubject
+            .subscribe { article ->
+                if (!article.isEmpty) {
+                    articleView.showArticleContent(article.value!!)
+                } else {
+                    articleView.hideArticleContent()
+                }
+            }.addTo(disposableBag)
 
-    private fun showArticleContent(article: Article) {
-
-        adapter.hideDetail()
-
-        back_btn.visibility = View.VISIBLE
-
-        contentView.setArticle(article)
-
-        // Shift layout.
-        val set = ConstraintSet()
-        set.clone(layout)
-        set.connect(
-            R.id.article_list, ConstraintSet.RIGHT,
-                    guideline.id, ConstraintSet.RIGHT)
-        set.connect(
-            R.id.article_content, ConstraintSet.LEFT,
-                    guideline.id, ConstraintSet.RIGHT)
-        set.applyTo(layout)
-
-        // Animation.
-        val transition = ChangeBounds()
-        TransitionManager.beginDelayedTransition(layout, transition)
-
-    }
-
-    private fun hideArticleContent() {
-
-        adapter.showDetail()
-
-        back_btn.visibility = View.INVISIBLE
-
-        // Shift layout.
-        val set = ConstraintSet()
-        set.clone(layout)
-        set.connect(
-            R.id.article_list, ConstraintSet.RIGHT,
-            layout.id, ConstraintSet.RIGHT)
-        set.connect(
-            R.id.article_content, ConstraintSet.LEFT,
-            layout.id, ConstraintSet.RIGHT)
-        set.applyTo(layout)
-
-        // Animation.
-        val transition = ChangeBounds()
-        TransitionManager.beginDelayedTransition(layout, transition)
+        // Back button's visibility.
+        articleViewModel.articleSubject
+            .subscribe { article ->
+                back_btn.visibility =
+                    if (!article.isEmpty) View.VISIBLE
+                    else View.VISIBLE
+            }.addTo(disposableBag)
     }
 
     // View behavior.
