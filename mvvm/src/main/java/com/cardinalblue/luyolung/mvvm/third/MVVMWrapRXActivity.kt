@@ -83,11 +83,7 @@ class MVVMWrapRXActivity : AppCompatActivity() {
         // Change of viewing article.
         articleListViewModel.selectedArticleSubject
             .subscribe { optionalArticle ->
-                if (optionalArticle.isEmpty) {
-                    articleView.hideArticleContent()
-                } else {
-                    articleView.showArticleContent(optionalArticle.value!!)
-                }
+                articleView.showArticle(optionalArticle.value)
             }.addTo(disposableBag)
 
         // Back button's visibility.
@@ -115,9 +111,9 @@ class MVVMWrapRXActivity : AppCompatActivity() {
             }
             .subscribe { articleList ->
                 if (articleList.isEmpty()) {
-                    articleView.hideArticleContent()
+                    articleView.showArticle(null)
                 } else {
-                    articleView.showArticleContent(articleList.first().article)
+                    articleView.showArticle(articleList.first().article)
                 }
             }.addTo(disposableBag)
 
@@ -128,7 +124,7 @@ class MVVMWrapRXActivity : AppCompatActivity() {
             }
             .subscribe { articleList ->
                 back_btn.visibility =
-                    if (!articleList.isEmpty()) View.VISIBLE
+                    if (articleList.isNotEmpty()) View.VISIBLE
                     else View.INVISIBLE
             }.addTo(disposableBag)
     }

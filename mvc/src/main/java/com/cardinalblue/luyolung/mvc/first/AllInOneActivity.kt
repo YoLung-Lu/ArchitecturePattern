@@ -65,7 +65,8 @@ class AllInOneActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                hideArticleContent()
+                articleView.showArticle(null)
+                back_btn.visibility = View.INVISIBLE
             }.addTo(disposableBag)
     }
 
@@ -86,24 +87,10 @@ class AllInOneActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         adapter.notifyDataSetChanged()
     }
 
-
-    private fun showArticleContent(article: Article) {
-
-        back_btn.visibility = View.VISIBLE
-
-        articleView.showArticleContent(article)
-    }
-
-    private fun hideArticleContent() {
-
-        back_btn.visibility = View.INVISIBLE
-
-        articleView.hideArticleContent()
-    }
-
     // Control behavior.
     override fun onItemClick(view: View, article: Article) {
-        showArticleContent(article)
+        articleView.showArticle(article)
+        back_btn.visibility = View.VISIBLE
     }
 
     // Another UI layer behavior.

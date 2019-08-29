@@ -91,12 +91,10 @@ class MVCActiveRepositoryActivity : AppCompatActivity(), ArticleAdapter.ItemClic
         onSelectedArticleChanged
             .subscribe {
                 val article = repository.getSelectedArticle()
-
-                if (article != null) {
-                    showArticleContent(article)
-                } else {
-                    hideArticleContent()
-                }
+                articleView.showArticle(article)
+                back_btn.visibility =
+                    if (article == null) View.INVISIBLE
+                    else View.VISIBLE
             }.addTo(disposableBag)
     }
 
@@ -104,18 +102,6 @@ class MVCActiveRepositoryActivity : AppCompatActivity(), ArticleAdapter.ItemClic
     private fun onUpdate(articles: List<Article>) {
         adapter.setData(articles)
         adapter.notifyDataSetChanged()
-    }
-
-    // View behavior.
-    private fun showArticleContent(article: Article) {
-        back_btn.visibility = View.VISIBLE
-        articleView.showArticleContent(article)
-    }
-
-    // View behavior.
-    private fun hideArticleContent() {
-        back_btn.visibility = View.INVISIBLE
-        articleView.hideArticleContent()
     }
 
     override fun onItemClick(view: View, article: Article) {

@@ -79,13 +79,13 @@ class MVCActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
     // View behavior.
     fun showArticleContent(article: Article) {
         back_btn.visibility = View.VISIBLE
-        articleView.showArticleContent(article)
+        articleView.showArticle(article)
     }
 
     // View behavior.
     fun hideArticleContent() {
         back_btn.visibility = View.INVISIBLE
-        articleView.hideArticleContent()
+        articleView.showArticle(null)
     }
 
     override fun onItemClick(view: View, article: Article) {

@@ -80,14 +80,10 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         // Change of viewing article.
         articleViewModel.article()
             .observe(this, Observer { article ->
-                if (article != null) {
-                    back_btn.visibility = View.VISIBLE
-                    articleView.showArticleContent(article)
-                } else {
-                    // null -> hide article.
-                    back_btn.visibility = View.INVISIBLE
-                    articleView.hideArticleContent()
-                }
+                articleView.showArticle(article)
+                back_btn.visibility =
+                    if (article != null) View.VISIBLE
+                    else View.INVISIBLE
             })
     }
 

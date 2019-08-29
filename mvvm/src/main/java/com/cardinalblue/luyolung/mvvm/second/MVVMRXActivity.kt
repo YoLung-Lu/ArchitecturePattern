@@ -85,11 +85,7 @@ class MVVMRXActivity : AppCompatActivity() {
         // Change of viewing article.
         articleViewModel.articleSubject
             .subscribe { article ->
-                if (!article.isEmpty) {
-                    articleView.showArticleContent(article.value!!)
-                } else {
-                    articleView.hideArticleContent()
-                }
+                articleView.showArticle(article.value)
             }.addTo(disposableBag)
 
         // Back button's visibility.

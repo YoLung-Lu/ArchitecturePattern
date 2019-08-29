@@ -76,14 +76,14 @@ class MVPArticleViewActivity : AppCompatActivity(), MVPContract2.ArticleView, Ar
 
         back_btn.visibility = View.VISIBLE
 
-        articleView.showArticleContent(article)
+        articleView.showArticle(article)
     }
 
     override fun hideArticleContent() {
 
         back_btn.visibility = View.INVISIBLE
 
-        articleView.hideArticleContent()
+        articleView.showArticle(null)
     }
 
     override fun onItemClick(view: View, article: Article) {

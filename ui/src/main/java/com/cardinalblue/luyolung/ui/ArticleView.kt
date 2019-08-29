@@ -44,7 +44,15 @@ class ArticleView: ConstraintLayout {
         articleListView.adapter = adapter
     }
 
-    fun showArticleContent(article: Article) {
+    fun showArticle(article: Article?) {
+        article?.let {
+            showArticleContent(it)
+        } ?:run {
+            hideArticleContent()
+        }
+    }
+
+    private fun showArticleContent(article: Article) {
 
         adapter.hideDetail()
 
@@ -66,7 +74,7 @@ class ArticleView: ConstraintLayout {
         TransitionManager.beginDelayedTransition(layout, transition)
     }
 
-    fun hideArticleContent() {
+    private fun hideArticleContent() {
 
         adapter.showDetail()
 
