@@ -31,6 +31,7 @@ class MVVMWrapRXActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mvvm)
+        this.title = "MVVM3"
 
         // View.
         articleView = findViewById(R.id.article_view)

@@ -31,8 +31,9 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val recyclerView = findViewById<RecyclerView>(R.id.item_list)
+        this.title = "Architecture Pattern"
 
+        val recyclerView = findViewById<RecyclerView>(R.id.item_list)
 
         val useCases = mutableListOf<UseCase>()
         useCases.add(MVC1)

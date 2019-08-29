@@ -31,6 +31,7 @@ class MVCActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mvc)
+        this.title = "MVC2"
 
         // View.
         articleView = findViewById(R.id.article_view)

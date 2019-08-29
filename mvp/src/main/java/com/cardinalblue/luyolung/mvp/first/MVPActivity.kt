@@ -26,6 +26,7 @@ class MVPActivity : AppCompatActivity(), MVPContract.ArticleView, ArticleAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mvp)
+        this.title = "MVP1"
 
         // View.
         val recyclerView = findViewById<RecyclerView>(R.id.article_list)

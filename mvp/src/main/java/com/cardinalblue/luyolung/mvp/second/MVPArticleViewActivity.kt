@@ -28,6 +28,7 @@ class MVPArticleViewActivity : AppCompatActivity(), MVPContract2.ArticleView, Ar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mvp2)
+        this.title = "MVP2"
 
         // View.
         articleView = findViewById(R.id.article_view)

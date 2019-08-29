@@ -30,6 +30,7 @@ class AllInOneActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mvc)
+        this.title = "MVC1"
 
         // View.
         articleView = findViewById(R.id.article_view)

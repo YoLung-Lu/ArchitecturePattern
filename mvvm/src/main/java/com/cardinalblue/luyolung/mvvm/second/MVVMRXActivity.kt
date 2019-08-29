@@ -32,6 +32,7 @@ class MVVMRXActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mvvm)
+        this.title = "MVVM2"
 
         // View.
         articleView = findViewById(R.id.article_view)
