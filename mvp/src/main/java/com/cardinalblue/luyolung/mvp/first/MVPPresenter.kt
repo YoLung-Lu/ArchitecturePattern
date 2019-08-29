@@ -1,9 +1,9 @@
 package com.cardinalblue.luyolung.mvp.first
 
-import com.cardinalblue.luyolung.repository.database.sharepref.SharePrefRepository
+import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeRepository
 import com.cardinalblue.luyolung.repository.model.Article
 
-class MVPPresenter(private val repository: SharePrefRepository,
+class MVPPresenter(private val repository: RunTimeRepository,
                    private val view: MVPContract.ArticleView
 ): MVPContract.ArticlePresenter {
 

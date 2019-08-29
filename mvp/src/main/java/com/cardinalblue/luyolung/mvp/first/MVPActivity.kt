@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cardinalblue.luyolung.repository.database.sharepref.SharePrefRepository
+import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeRepository
 import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.ui.ArticleAdapter
@@ -39,7 +39,7 @@ class MVPActivity : AppCompatActivity(), MVPContract.ArticleView, ArticleAdapter
         recyclerView.addItemDecoration(dividerItemDecoration)
 
         // Repository.
-        val repository = SharePrefRepository()
+        val repository = RunTimeRepository()
         repository.setDefaultArticle(getDefaultArticle())
 
         // Presenter and Use cases.

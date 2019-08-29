@@ -13,7 +13,7 @@ import com.cardinalblue.luyolung.architecturepattern.UseCase.MVVM2
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cardinalblue.luyolung.architecturepattern.UseCaseAdapter.ItemClickListener
-import com.cardinalblue.luyolung.mvc.first.MVCBasicActivity
+import com.cardinalblue.luyolung.mvc.first.AllInOneActivity
 import com.cardinalblue.luyolung.mvc.second.MVCActivity
 import com.cardinalblue.luyolung.mvp.first.MVPActivity
 import com.cardinalblue.luyolung.mvp.second.MVPArticleViewActivity
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
     override fun onItemClick(view: View, useCase: UseCase) {
         val navigateIntent: Intent? =
             when (useCase) {
-                MVC1 -> Intent(this, MVCBasicActivity::class.java)
+                MVC1 -> Intent(this, AllInOneActivity::class.java)
                 MVC2 -> Intent(this, MVCActivity::class.java)
                 MVP1 -> Intent(this, MVPActivity::class.java)
                 MVP2 -> Intent(this, MVPArticleViewActivity::class.java)

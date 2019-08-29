@@ -6,7 +6,7 @@
             android:label="@string/app_name"
             android:supportsRtl="true">
 
-        <activity android:name=".first.MVCBasicActivity"/>
+        <activity android:name=".first.AllInOneActivity"/>
         <activity android:name=".second.MVCActivity"/>
 
     </application>

@@ -2,15 +2,8 @@ package com.cardinalblue.luyolung.mvc.first
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.TransitionManager
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.Guideline
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.cardinalblue.luyolung.repository.database.sharepref.SharePrefRepository
+import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeRepository
 import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.ui.ArticleAdapter
@@ -18,21 +11,19 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvc.*
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.cardinalblue.luyolung.mvc.R
 import com.cardinalblue.luyolung.repository.util.ArticleGenerator
-import com.cardinalblue.luyolung.ui.ArticleContentView
 import com.cardinalblue.luyolung.ui.ArticleView
 
 
-class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
+class AllInOneActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
 
     private lateinit var articleView: ArticleView
 
     private val viewData: MutableList<Article> = mutableListOf()
     private lateinit var adapter: ArticleAdapter
 
-    private val repository = SharePrefRepository()
+    private val repository = RunTimeRepository()
 
     private val disposableBag = CompositeDisposable()
 
@@ -67,7 +58,7 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
             .subscribe {
                 val article = ArticleGenerator.randomArticle()
                 repository.addArticle(article)
-                onUpdate(repository.getArticles())
+                onUpdate()
             }.addTo(disposableBag)
 
         // Back from article content.
@@ -83,13 +74,14 @@ class MVCBasicActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
             repository.mergeDefaultArticles()
         }
 
-        onUpdate(repository.getArticles())
+        onUpdate()
     }
 
     // View behavior.
-    private fun onUpdate(articles: MutableList<Article>) {
+    // Model being passively.
+    private fun onUpdate() {
         viewData.clear()
-        viewData.addAll(articles)
+        viewData.addAll(repository.getArticles())
         adapter.notifyDataSetChanged()
     }
 

@@ -2,7 +2,7 @@ package com.cardinalblue.luyolung.repository.database.sharepref
 
 import com.cardinalblue.luyolung.repository.model.Article
 
-class SharePrefRepository {
+class RunTimeRepository {
 
     private var articles: MutableList<Article> = mutableListOf()
     private val defaultArticles: MutableList<Article> = mutableListOf()
