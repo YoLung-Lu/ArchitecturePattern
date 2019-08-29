@@ -1,12 +1,25 @@
 package com.cardinalblue.luyolung.mvvm.third
 
+import com.cardinalblue.luyolung.mvvm.second.Optional
 import com.cardinalblue.luyolung.repository.model.Article
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
+import io.reactivex.Observable
 
 class ArticleListWrapRxViewModel(defaultArticle: List<Article>) {
 
     val articleListSubject: Relay<List<ArticleWrapRXViewModel>> = BehaviorRelay.create<List<ArticleWrapRXViewModel>>().toSerialized()
+
+    val selectedArticleSubject: Observable<Optional<Article>> =
+        articleListSubject.map { articles ->
+            articles.filter { it.selected }.firstOrNull()?.let { Optional(it.article) }?: Optional<Article>(null)
+            }
+
+
+    val showArticleSubject: Observable<Boolean> =
+        articleListSubject.map { articles ->
+            articles.filter { it.selected }.firstOrNull()?.let { true }?: false
+        }
 
     private val articles = mutableListOf<ArticleWrapRXViewModel>()
 

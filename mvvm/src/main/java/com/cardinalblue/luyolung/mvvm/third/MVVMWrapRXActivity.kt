@@ -81,6 +81,34 @@ class MVVMWrapRXActivity : AppCompatActivity() {
             }.addTo(disposableBag)
 
         // Change of viewing article.
+        articleListViewModel.selectedArticleSubject
+            .subscribe { optionalArticle ->
+                if (optionalArticle.isEmpty) {
+                    articleView.hideArticleContent()
+                } else {
+                    articleView.showArticleContent(optionalArticle.value!!)
+                }
+            }.addTo(disposableBag)
+
+        // Back button's visibility.
+        articleListViewModel.showArticleSubject
+            .subscribe { showArticle ->
+                back_btn.visibility =
+                    if (showArticle) View.VISIBLE
+                    else View.INVISIBLE
+            }.addTo(disposableBag)
+    }
+
+    // An implementation that acquire all information related to selection
+    // from the articleListSubject
+    private fun subscribeViewModel2() {
+        // Change of article list.
+        articleListViewModel.articleListSubject
+            .subscribe {
+                onUpdate(it)
+            }.addTo(disposableBag)
+
+        // Change of viewing article.
         articleListViewModel.articleListSubject
             .map { articles ->
                 articles.filter { it.selected }
