@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.cardinalblue.luyolung.mvvm.R
 import com.cardinalblue.luyolung.repository.model.Article
-import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleAdapter
 import com.cardinalblue.luyolung.ui.ArticleView
 import com.jakewharton.rxbinding2.view.RxView
@@ -56,8 +55,7 @@ class MVVMActivity : AppCompatActivity(), ArticleAdapter.ItemClickListener {
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = ArticleGenerator.randomArticle()
-                articleListViewModel.insert(article)
+                articleListViewModel.generateNewArticle()
             }.addTo(disposableBag)
 
         // Back from article content.

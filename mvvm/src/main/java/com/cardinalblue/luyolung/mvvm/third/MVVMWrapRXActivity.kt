@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.cardinalblue.luyolung.mvvm.R
 import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
-import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleAdapter
 import com.cardinalblue.luyolung.ui.ArticleView
 import com.jakewharton.rxbinding2.view.RxView

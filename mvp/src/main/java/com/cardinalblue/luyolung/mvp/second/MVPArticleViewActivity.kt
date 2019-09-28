@@ -9,7 +9,6 @@ import com.cardinalblue.luyolung.repository.util.ArticleConverter
 import com.cardinalblue.luyolung.ui.ArticleAdapter
 import io.reactivex.disposables.CompositeDisposable
 import com.cardinalblue.luyolung.mvp.R
-import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
@@ -55,8 +54,7 @@ class MVPArticleViewActivity : AppCompatActivity(), MVPContract2.ArticleView, Ar
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = ArticleGenerator.randomArticle()
-                presenter.createNewArticle(article)
+                presenter.createNewArticle()
             }.addTo(disposableBag)
 
         // Back from article content.

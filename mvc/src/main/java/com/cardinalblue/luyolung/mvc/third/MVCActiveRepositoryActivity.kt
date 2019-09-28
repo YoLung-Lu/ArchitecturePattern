@@ -12,7 +12,6 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvc.*
 import com.cardinalblue.luyolung.mvc.R
 import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeActiveRepository
-import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleView
 import io.reactivex.subjects.PublishSubject
 
@@ -70,8 +69,7 @@ class MVCActiveRepositoryActivity : AppCompatActivity(), ArticleAdapter.ItemClic
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = ArticleGenerator.randomArticle()
-                controller.createNewArticle(article)
+                controller.createNewArticle()
             }.addTo(disposableBag)
 
         // Back from article content.

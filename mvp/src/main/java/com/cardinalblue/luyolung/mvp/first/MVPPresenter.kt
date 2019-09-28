@@ -2,6 +2,7 @@ package com.cardinalblue.luyolung.mvp.first
 
 import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeRepository
 import com.cardinalblue.luyolung.repository.model.Article
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 
 class MVPPresenter(private val repository: RunTimeRepository,
                    private val view: MVPContract.ArticleView
@@ -15,7 +16,8 @@ class MVPPresenter(private val repository: RunTimeRepository,
         view.onUpdate(repository.getArticles())
     }
 
-    override fun createNewArticle(article: Article) {
+    override fun createNewArticle() {
+        val article = ArticleGenerator.randomArticle()
         repository.addArticle(article)
         view.onUpdate(repository.getArticles())
     }

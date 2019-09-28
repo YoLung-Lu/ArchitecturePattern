@@ -4,7 +4,7 @@ import com.cardinalblue.luyolung.repository.model.Article
 
 interface MVPContract2 {
     interface ArticlePresenter {
-        fun createNewArticle(article: Article)
+        fun createNewArticle()
         fun onArticleClicked(article: Article)
         fun onBackClicked()
     }

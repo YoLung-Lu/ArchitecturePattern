@@ -2,6 +2,7 @@ package com.cardinalblue.luyolung.mvc.second
 
 import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeRepository
 import com.cardinalblue.luyolung.repository.model.Article
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 
 class MVCController(private val repository: RunTimeRepository,
                     private val view: MVCActivity) {
@@ -13,7 +14,8 @@ class MVCController(private val repository: RunTimeRepository,
         view.onUpdate(repository.getArticles())
     }
 
-    fun createNewArticle(article: Article) {
+    fun createNewArticle() {
+        val article = ArticleGenerator.randomArticle()
         repository.addArticle(article)
         view.onUpdate(repository.getArticles())
     }

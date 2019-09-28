@@ -3,6 +3,7 @@ package com.cardinalblue.luyolung.mvc.third
 import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeActiveRepository
 import com.cardinalblue.luyolung.repository.database.sharepref.RunTimeRepository
 import com.cardinalblue.luyolung.repository.model.Article
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 
 class MVCActiveRepositoryController(private val repository: RunTimeActiveRepository) {
 
@@ -12,7 +13,8 @@ class MVCActiveRepositoryController(private val repository: RunTimeActiveReposit
         }
     }
 
-    fun createNewArticle(article: Article) {
+    fun createNewArticle() {
+        val article = ArticleGenerator.randomArticle()
         repository.addArticle(article)
     }
 

@@ -57,8 +57,7 @@ class MVPActivity : AppCompatActivity(), MVPContract.ArticleView, ArticleAdapter
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = ArticleGenerator.randomArticle()
-                presenter.createNewArticle(article)
+                presenter.createNewArticle()
             }.addTo(disposableBag)
     }
 
