@@ -2,30 +2,33 @@ package com.cardinalblue.luyolung.mvvm.third
 
 import com.cardinalblue.luyolung.mvvm.second.Optional
 import com.cardinalblue.luyolung.repository.model.Article
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
 import io.reactivex.Observable
 
-class ArticleListWrapRxViewModel(defaultArticle: List<Article>) {
+class ArticleListViewModel(defaultArticle: List<Article>) {
 
-    val articleListSubject: Relay<List<ArticleWrapRXViewModel>> = BehaviorRelay.create<List<ArticleWrapRXViewModel>>().toSerialized()
+    val articleListSubject: Relay<List<ArticleViewModel>> = BehaviorRelay.create<List<ArticleViewModel>>().toSerialized()
 
     val selectedArticleSubject: Observable<Optional<Article>> =
         articleListSubject.map { articles ->
-            articles.filter { it.selected }.firstOrNull()?.let { Optional(it.article) }?: Optional<Article>(null)
+            articles.firstOrNull { it.selected }?.let { Optional(it.article) }
+                ?: Optional<Article>(null)
             }
 
 
     val showArticleSubject: Observable<Boolean> =
         articleListSubject.map { articles ->
-            articles.filter { it.selected }.firstOrNull()?.let { true }?: false
+            articles.firstOrNull { it.selected }?.let { true }
+                ?: false
         }
 
-    private val articles = mutableListOf<ArticleWrapRXViewModel>()
+    private val articles = mutableListOf<ArticleViewModel>()
 
     init {
         articles.addAll(
-            defaultArticle.map { ArticleWrapRXViewModel(it) }
+            defaultArticle.map { ArticleViewModel(it) }
         )
 
         articles.isNotEmpty().let {
@@ -40,9 +43,9 @@ class ArticleListWrapRxViewModel(defaultArticle: List<Article>) {
         articleListSubject.accept(articles)
     }
 
-    fun add(article: Article) {
-        articles.add(ArticleWrapRXViewModel(article))
-        articleListSubject.accept(articles)
+    fun generateNewArticle() {
+        val article = ArticleGenerator.randomArticle()
+        articles.add(ArticleViewModel(article))
     }
 
     fun clear() {

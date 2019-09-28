@@ -22,7 +22,7 @@ class MVVMWrapRXActivity : AppCompatActivity() {
 
     private lateinit var adapter: ArticleAdapter
 
-    private lateinit var articleListViewModel: ArticleListWrapRxViewModel
+    private lateinit var articleListViewModel: ArticleListViewModel
 
     private val clickedArticle: PublishSubject<Article> = PublishSubject.create()
 
@@ -41,7 +41,7 @@ class MVVMWrapRXActivity : AppCompatActivity() {
         articleView.setAdapter(adapter)
 
         // View model.
-        articleListViewModel = ArticleListWrapRxViewModel(getDefaultArticle())
+        articleListViewModel = ArticleListViewModel(getDefaultArticle())
 
         subscribeUseCases()
         subscribeViewModel()
@@ -56,8 +56,7 @@ class MVVMWrapRXActivity : AppCompatActivity() {
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = ArticleGenerator.randomArticle()
-                articleListViewModel.add(article)
+                articleListViewModel.generateNewArticle()
             }.addTo(disposableBag)
 
         // Back from article content.
@@ -130,7 +129,7 @@ class MVVMWrapRXActivity : AppCompatActivity() {
     }
 
     // View behavior.
-    private fun onUpdate(articles: List<ArticleWrapRXViewModel>) {
+    private fun onUpdate(articles: List<ArticleViewModel>) {
         val mapToArticle = articles.map { it.article }
         adapter.setData(mapToArticle)
         adapter.notifyDataSetChanged()

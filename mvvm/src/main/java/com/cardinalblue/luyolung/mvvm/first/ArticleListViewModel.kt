@@ -3,9 +3,11 @@ package com.cardinalblue.luyolung.mvvm.first
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.cardinalblue.luyolung.mvvm.third.ArticleViewModel
 import com.cardinalblue.luyolung.repository.database.room.ArticleRepository
 import com.cardinalblue.luyolung.repository.database.room.ArticleRoomDatabase
 import com.cardinalblue.luyolung.repository.model.Article
+import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -31,6 +33,11 @@ class ArticleListViewModel(application: Application) : AndroidViewModel(applicat
         val articleDao = ArticleRoomDatabase.getDatabase(application, scope).articleDao()
         repository = ArticleRepository(articleDao)
         allArticles = repository.allArticles
+    }
+
+    fun generateNewArticle() {
+        val article = ArticleGenerator.randomArticle()
+        insert(article)
     }
 
     /**
