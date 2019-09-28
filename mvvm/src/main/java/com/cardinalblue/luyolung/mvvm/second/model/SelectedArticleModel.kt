@@ -1,10 +1,11 @@
-package com.cardinalblue.luyolung.mvvm.second
+package com.cardinalblue.luyolung.mvvm.second.model
 
+import com.cardinalblue.luyolung.mvvm.second.Optional
 import com.cardinalblue.luyolung.repository.model.Article
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
 
-class ArticleRXViewModel(defaultArticle: Optional<Article> = Optional(null)) {
+class SelectedArticleModel(defaultArticle: Optional<Article> = Optional(null)) {
 
     val articleSubject: Relay<Optional<Article>> = BehaviorRelay.create<Optional<Article>>().toSerialized()
 
@@ -12,7 +13,7 @@ class ArticleRXViewModel(defaultArticle: Optional<Article> = Optional(null)) {
         articleSubject.accept(defaultArticle)
     }
 
-    fun setArticle(article: Article) {
+    fun setArticle(article: Article?) {
         articleSubject.accept(Optional(article))
     }
 

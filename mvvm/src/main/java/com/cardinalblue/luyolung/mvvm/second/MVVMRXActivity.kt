@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.cardinalblue.luyolung.mvvm.R
+import com.cardinalblue.luyolung.mvvm.second.model.ArticlesModel
+import com.cardinalblue.luyolung.mvvm.second.model.SelectedArticleModel
+import com.cardinalblue.luyolung.mvvm.second.viewmodel.ArticleListRXViewModel
+import com.cardinalblue.luyolung.mvvm.second.viewmodel.BackViewModel
+import com.cardinalblue.luyolung.mvvm.second.viewmodel.SelectedArticleViewModel
 import com.cardinalblue.luyolung.repository.model.Article
 import com.cardinalblue.luyolung.repository.util.ArticleConverter
-import com.cardinalblue.luyolung.repository.util.ArticleGenerator
 import com.cardinalblue.luyolung.ui.ArticleAdapter
 import com.cardinalblue.luyolung.ui.ArticleView
 import com.jakewharton.rxbinding2.view.RxView
@@ -23,7 +27,8 @@ class MVVMRXActivity : AppCompatActivity() {
     private lateinit var adapter: ArticleAdapter
 
     private lateinit var articleListViewModel: ArticleListRXViewModel
-    private lateinit var articleViewModel: ArticleRXViewModel
+    private lateinit var selectedArticleViewModel: SelectedArticleViewModel
+    private lateinit var backViewModel: BackViewModel
 
     private val clickedArticle: PublishSubject<Article> = PublishSubject.create()
 
@@ -41,12 +46,20 @@ class MVVMRXActivity : AppCompatActivity() {
         adapter.setClickSubject(clickedArticle)
         articleView.setAdapter(adapter)
 
+        // Model.
+        val articlesModel = ArticlesModel()
+        val selectedArticleModel = SelectedArticleModel()
+
         // View model.
-        articleListViewModel = ArticleListRXViewModel(getDefaultArticle())
-        articleViewModel = ArticleRXViewModel()
+        articleListViewModel = ArticleListRXViewModel(articlesModel)
+        selectedArticleViewModel = SelectedArticleViewModel(selectedArticleModel)
+        backViewModel = BackViewModel(selectedArticleModel)
 
         subscribeUseCases()
         subscribeViewModel()
+
+        // Start.
+        articlesModel.setDefaultData(getDefaultArticle())
     }
 
     override fun onDestroy() {
@@ -58,20 +71,19 @@ class MVVMRXActivity : AppCompatActivity() {
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                val article = ArticleGenerator.randomArticle()
-                articleListViewModel.add(article)
+                articleListViewModel.generateNewArticle()
             }.addTo(disposableBag)
 
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                articleViewModel.clear()
+                selectedArticleViewModel.clear()
             }.addTo(disposableBag)
 
         // Clicked article.
         clickedArticle
             .subscribe { article ->
-                articleViewModel.setArticle(article)
+                selectedArticleViewModel.setArticle(article)
             }.addTo(disposableBag)
     }
 
@@ -83,16 +95,16 @@ class MVVMRXActivity : AppCompatActivity() {
             }.addTo(disposableBag)
 
         // Change of viewing article.
-        articleViewModel.articleSubject
+        selectedArticleViewModel.articleSubject
             .subscribe { article ->
                 articleView.showArticle(article.value)
             }.addTo(disposableBag)
 
         // Back button's visibility.
-        articleViewModel.articleSubject
-            .subscribe { article ->
+        backViewModel.visible
+            .subscribe { visible ->
                 back_btn.visibility =
-                    if (!article.isEmpty) View.VISIBLE
+                    if (visible) View.VISIBLE
                     else View.INVISIBLE
             }.addTo(disposableBag)
     }
@@ -103,7 +115,7 @@ class MVVMRXActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    // Another UI layer behavior.
+    // IO layer behavior.
     private fun getDefaultArticle(): List<Article> {
         val resource = resources.openRawResource(R.raw.raw_data)
             .bufferedReader()

@@ -53,6 +53,7 @@ class MVCActiveRepositoryActivity : AppCompatActivity(), ArticleAdapter.ItemClic
 
         // View scribe to model.
         // Need to happen before controller start to modify repository.
+        // TODO: Should controller hook the view and repo?
         subscribeDataChanged()
 
         // Controller and Use cases.
