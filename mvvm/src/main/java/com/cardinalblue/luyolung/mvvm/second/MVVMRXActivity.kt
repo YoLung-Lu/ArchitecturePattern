@@ -41,6 +41,7 @@ class MVVMRXActivity : AppCompatActivity() {
 
         // View.
         articleView = findViewById(R.id.article_view)
+        back_btn.visibility = View.VISIBLE
 
         adapter = ArticleAdapter(this, mutableListOf())
         adapter.setClickSubject(clickedArticle)
@@ -77,7 +78,7 @@ class MVVMRXActivity : AppCompatActivity() {
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                selectedArticleViewModel.clear()
+                backViewModel.onBackTriggered()
             }.addTo(disposableBag)
 
         // Clicked article.
@@ -100,12 +101,10 @@ class MVVMRXActivity : AppCompatActivity() {
                 articleView.showArticle(article.value)
             }.addTo(disposableBag)
 
-        // Back button's visibility.
-        backViewModel.visible
-            .subscribe { visible ->
-                back_btn.visibility =
-                    if (visible) View.VISIBLE
-                    else View.INVISIBLE
+        // Back button's behavior.
+        backViewModel.backSignal
+            .subscribe {
+                onBackPressed()
             }.addTo(disposableBag)
     }
 

@@ -61,13 +61,13 @@ class MVVMWrapRXActivity : AppCompatActivity() {
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                articleListViewModel.setSelectedArticle(null)
+                articleListViewModel.unSelectArticle()
             }.addTo(disposableBag)
 
         // Clicked article.
         clickedArticle
             .subscribe { article ->
-                articleListViewModel.setSelectedArticle(article)
+                articleListViewModel.selectArticle(article)
             }.addTo(disposableBag)
     }
 
@@ -108,33 +108,29 @@ class MVVMWrapRXActivity : AppCompatActivity() {
                 articles.filter { it.selected }
             }
             .subscribe { articleList ->
-                if (articleList.isEmpty()) {
-                    articleView.showArticle(null)
-                } else {
-                    articleView.showArticle(articleList.first().article)
-                }
+                articleView.showArticle(articleList.firstOrNull()?.article)
             }.addTo(disposableBag)
 
         // Back button's visibility.
         articleListViewModel.articleListSubject
             .map { articles ->
-                articles.filter { it.selected }
+                articles.any { it.selected }
             }
-            .subscribe { articleList ->
+            .subscribe { hasArticle ->
                 back_btn.visibility =
-                    if (articleList.isNotEmpty()) View.VISIBLE
+                    if (hasArticle) View.VISIBLE
                     else View.INVISIBLE
             }.addTo(disposableBag)
     }
 
     // View behavior.
-    private fun onUpdate(articles: List<ArticleViewModel>) {
+    private fun onUpdate(articles: List<ArticleUIModel>) {
         val mapToArticle = articles.map { it.article }
         adapter.setData(mapToArticle)
         adapter.notifyDataSetChanged()
     }
 
-    // Another UI layer behavior.
+    // IO layer behavior.
     private fun getDefaultArticle(): List<Article> {
         val resource = resources.openRawResource(R.raw.raw_data)
             .bufferedReader()

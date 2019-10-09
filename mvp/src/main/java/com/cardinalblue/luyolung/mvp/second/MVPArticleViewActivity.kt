@@ -15,7 +15,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_mvp.add_article_btn
 import kotlinx.android.synthetic.main.activity_mvp2.*
 
-class MVPArticleViewActivity : AppCompatActivity(), MVPContract2.ArticleView, ArticleAdapter.ItemClickListener {
+class MVPArticleViewActivity : AppCompatActivity(), ArticleContract.ArticleView, ArticleAdapter.ItemClickListener {
 
     private lateinit var articleView: ArticleView
 
@@ -54,18 +54,18 @@ class MVPArticleViewActivity : AppCompatActivity(), MVPContract2.ArticleView, Ar
         // Add article.
         RxView.clicks(add_article_btn)
             .subscribe {
-                presenter.createNewArticle()
+                presenter.onAddArticle()
             }.addTo(disposableBag)
 
         // Back from article content.
         RxView.clicks(back_btn)
             .subscribe {
-                presenter.onBackClicked()
+                presenter.onBack()
             }.addTo(disposableBag)
     }
 
     // View behavior.
-    override fun onUpdate(articles: List<Article>) {
+    override fun showArticles(articles: List<Article>) {
         adapter.setData(articles)
         adapter.notifyDataSetChanged()
     }
@@ -85,7 +85,7 @@ class MVPArticleViewActivity : AppCompatActivity(), MVPContract2.ArticleView, Ar
     }
 
     override fun onItemClick(view: View, article: Article) {
-        presenter.onArticleClicked(article)
+        presenter.onArticleSelected(article)
     }
 
     // Another UI layer behavior.

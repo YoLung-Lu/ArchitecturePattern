@@ -9,7 +9,7 @@ import io.reactivex.Observable
 
 class ArticleListViewModel(defaultArticle: List<Article>) {
 
-    val articleListSubject: Relay<List<ArticleViewModel>> = BehaviorRelay.create<List<ArticleViewModel>>().toSerialized()
+    val articleListSubject: Relay<List<ArticleUIModel>> = BehaviorRelay.create<List<ArticleUIModel>>().toSerialized()
 
     val selectedArticleSubject: Observable<Optional<Article>> =
         articleListSubject.map { articles ->
@@ -24,11 +24,11 @@ class ArticleListViewModel(defaultArticle: List<Article>) {
                 ?: false
         }
 
-    private val articles = mutableListOf<ArticleViewModel>()
+    private val articles = mutableListOf<ArticleUIModel>()
 
     init {
         articles.addAll(
-            defaultArticle.map { ArticleViewModel(it) }
+            defaultArticle.map { ArticleUIModel(it) }
         )
 
         articles.isNotEmpty().let {
@@ -36,16 +36,21 @@ class ArticleListViewModel(defaultArticle: List<Article>) {
         }
     }
 
-    fun setSelectedArticle(article: Article?) {
+    fun selectArticle(article: Article?) {
         articles.forEach {
             it.selected = it.article == article
         }
         articleListSubject.accept(articles)
     }
 
+    fun unSelectArticle() {
+        selectArticle(null)
+    }
+
     fun generateNewArticle() {
         val article = ArticleGenerator.randomArticle()
-        articles.add(ArticleViewModel(article))
+        articles.add(ArticleUIModel(article))
+        articleListSubject.accept(articles)
     }
 
     fun clear() {

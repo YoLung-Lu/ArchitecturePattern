@@ -3,7 +3,6 @@ package com.cardinalblue.luyolung.mvvm.first
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.cardinalblue.luyolung.mvvm.third.ArticleViewModel
 import com.cardinalblue.luyolung.repository.database.room.ArticleRepository
 import com.cardinalblue.luyolung.repository.database.room.ArticleRoomDatabase
 import com.cardinalblue.luyolung.repository.model.Article

@@ -2,15 +2,15 @@ package com.cardinalblue.luyolung.mvp.second
 
 import com.cardinalblue.luyolung.repository.model.Article
 
-interface MVPContract2 {
+interface ArticleContract {
     interface ArticlePresenter {
-        fun createNewArticle()
-        fun onArticleClicked(article: Article)
-        fun onBackClicked()
+        fun onAddArticle()
+        fun onArticleSelected(article: Article)
+        fun onBack()
     }
 
     interface ArticleView {
-        fun onUpdate(articles: List<Article>)
+        fun showArticles(articles: List<Article>)
         fun showArticleContent(article: Article)
         fun hideArticleContent()
     }
